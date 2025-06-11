@@ -42,39 +42,39 @@
     - SpringBoot 3.4, Java 17, JPA, Querydsl, AWS RDS(MySQL), EC2, Gemini 2.0 flash, Docker, Github Actions, 식품영양정보 Open API, Prometheus, Grafana
 
 ### 아키텍처
-
-![Heady System Architecture.png](attachment:410f6df4-ba9e-42de-8366-b9e425eb0724:Heady_System_Architecture.png)
+![Heady System Architecture](https://github.com/user-attachments/assets/60ce3488-ea5d-4425-b389-e11b80dce973)
 
 ### ERD
+![heady ERD](https://github.com/user-attachments/assets/6d70b371-c4b1-43a8-aa79-a4c9df404d0c)
 
-![heady ERD.png](attachment:1a597652-b491-4d46-b100-e5553d37b7da:heady_ERD.png)
 
 ### 트러블 슈팅 - 1
 
 ---
 
-[**로그인 API 비밀번호 해싱 병목 현상 및 성능 최적화](https://blog.naver.com/smileman___/223891986773) (결과: 평균 응답 시간 504ms → 75ms)**
+**[로그인 API 비밀번호 해싱 병목 현상 및 성능 최적화](https://blog.naver.com/smileman___/223891986773) (결과: 평균 응답 시간 504ms → 75ms)**
 
 - **문제 발생**
     - 로그인 API 평균 응답 시간 **500ms 초과**, 부하 시 **1초 이상 급증**하는 심각한 지연 발생. 상세 로깅 결과 **비밀번호 해시 검증 구간에서 200ms 이상 소요되는 것이 주된 병목** 확인
-        
-        ![image.png](attachment:eaaead48-9ab1-4914-906b-82991affd249:image.png)
+        ![image](https://github.com/user-attachments/assets/bf980bb9-33ab-4320-8de2-add558f008f4)
         
 
 - **실패한 시도**
     - **JPA 쿼리 과다 로딩 문제 의심**: EXPLAIN을 통해 인덱스 적용 여부를 확인, 적절히 인덱스를 타고 있었으며 DB 조회 속도는 병목이 아님
-        
-        ![image.png](attachment:1202201a-63b6-4e3d-8c04-14fac2ff0bab:image.png)
+      ![image](https://github.com/user-attachments/assets/3bfc4800-09c4-43e8-8e83-9f5cbb7084e3)
+
+
         
     
     - **Argon2id 적용**: BCrypt 대안으로 Argon2id 알고리즘 적용했으나, 메모리 집약적 특성으로 잦은 Major GC 발생 및 **평균 120ms, 최대 423ms에 달하는 STW 시간 유발**하여 오히려 전체 응답 지연 심화
-        
-        ![image.png](attachment:a44b4533-5628-4513-bc06-00fdd8d14788:image.png)
+        ![image](https://github.com/user-attachments/assets/f903a3e4-fe4f-4f83-92cd-a79d3d0c9809)
+
         
     
     - **GC 튜닝 및 스레드 풀 조정**: Argon2id 적용 시 발생한 GC 문제 해결 위해 -Xms256m -Xmx256m -XX:+UseG1GC -XX:MaxGCPauseMillis=200 옵션 사용하여 JVM GC 튜닝 시도 및 스레드 풀 조정. 이로 인해 **GC STW 시간 평균 4.53ms, 최대 7.80ms 수준으로 크게 감소**하는 성과를 얻었으나, 비밀번호 해시 검증이라는 CPU 및 메모리 집약적 작업 본질적인 시간 단축시키지 못해 유의미한 전체 응답 시간 개선은 이끌어내지 못함
         
-        ![image.png](attachment:0cff5918-88de-46bf-9375-85af37a73205:image.png)
+        ![image](https://github.com/user-attachments/assets/2f83392f-5628-425f-809f-e60e684dec1e)
+
         
 
 - **최종 해결 전략**
@@ -83,34 +83,39 @@
 
 - **결과: 평균 응답 시간 504ms → 75ms, 최대 응답 시간 1.03s → 135ms 대폭 감소**
     
-    ![image.png](attachment:3a52b610-6cca-490b-b41a-a8353d3f3321:image.png)
+    ![image](https://github.com/user-attachments/assets/812b4c4c-b0a4-4c02-84ab-d5614dcbd4b4)
+
     
 
 ### 트러블 슈팅 - 2
 
 ---
 
-[**음식 검색 API Full Scan 및 Slow Query 문제 해결](https://blog.naver.com/smileman___/223889586212) (결과: 평균 응답 시간 552ms → 23.4ms)**
+**[음식 검색 API Full Scan 및 Slow Query 문제 해결](https://blog.naver.com/smileman___/223889586212) (결과: 평균 응답 시간 552ms → 23.4ms)**
 
 - **문제 발생**
     - 음식 이름 검색 API **평균 552ms 이상 응답 지연** 발생
         
-        ![image.png](attachment:afca99fb-3142-4de4-8e2e-543ded741863:image.png)
+        ![image](https://github.com/user-attachments/assets/b8975820-e539-493f-9e5c-d138b8322f3a)
+
         
     
     - RDS 모니터링에서 **평균 4.6/sec, 최대 10/sec Slow Queries** 관측.
         
-        ![image.png](attachment:1fdc9e65-ea05-496c-a658-721378d89066:image.png)
+        ![image](https://github.com/user-attachments/assets/0de2b3e1-bd1f-4d70-90f5-b1f2eaf45258)
+
         
     
     - HikariCP 커넥션 점유 시간 **최대 436ms까지 상승**하여 커넥션 풀 병목 현상 유발.
         
-        ![image.png](attachment:5a3fc796-25bf-4252-a286-a21126722bb3:image.png)
+        ![image](https://github.com/user-attachments/assets/16ff2391-8814-4d67-923f-03903ac19487)
+
         
     
     - EXPLAIN 분석 결과, 기존 LOWER(name) LIKE '%keyword%' 쿼리는 **type=ALL (Full Scan)과 Extra=Using filesort (정렬 비용) 발생**하며 인덱스 전혀 사용하지 않는 것이 근본적인 원인
         
-        ![image.png](attachment:ff7d7b45-6889-4960-9a5b-8a3a3263e40d:image.png)
+        ![image](https://github.com/user-attachments/assets/d759578e-4f64-4f16-a8a3-a71448c3103d)
+
         
 
 - **해결 과정**
@@ -120,33 +125,40 @@
 - **구현 절차**
     - **RDS 파라미터 및 인덱스 설정**: RDS ngram_token_size=2 설정 후 인스턴스 재시작, ALTER TABLE foods ADD FULLTEXT INDEX idx_food_name_ft(name) WITH PARSER ngram;
         
-        ![image.png](attachment:1fb34a47-a102-474f-af4c-4632ccde7e81:image.png)
+        ![image](https://github.com/user-attachments/assets/42eedf7b-a871-41aa-a77c-7314b43b29b5)
+
         
     
     - 명령어로 N-gram Full-Text 인덱스 생성
         
-        ![image.png](attachment:a4cee07f-c96c-4226-ab3c-fb4eabbfd710:image.png)
+        ![image](https://github.com/user-attachments/assets/7f674efa-baac-468d-9ca9-a822c472af03)
+
         
     
     - **쿼리 구조 변경**: 기존 LIKE 기반 JPQL 대신, MATCH(name) AGAINST(:keyword IN NATURAL LANGUAGE MODE)를 사용하는 Native Query로 변경하여 Full-Text 인덱스 명시적으로 활용
         
-        ![image.png](attachment:e67aacf5-8872-4e22-835d-d938688b8659:image.png)
+        ![image](https://github.com/user-attachments/assets/15900fd3-61aa-4b30-9f7c-d8b21121c768)
+
         
     
 - **결과**
     - 음식 검색 API **평균 응답 시간 552ms 이상에서 23.4ms로 약 23.6배 단축**.
         
-        ![image.png](attachment:1f8f424f-0113-4858-aa16-536f32190c0d:image.png)
+        ![image](https://github.com/user-attachments/assets/75cbcae7-ec31-4762-a396-e761c559b874)
+
         
     
     - 이와 함께 MySQL Slow Queries는 **95% 이상 감소**,
         
-        ![image.png](attachment:b5f512a6-5fb4-41f9-89fb-83eebb839422:image.png)
+        ![image](https://github.com/user-attachments/assets/6aeb3a6f-bafb-4630-9f8d-4aa14ff2ee8a)
+
+
         
     
     - HikariCP 커넥션 점유 시간은 **최대 436ms에서 235ms로 약 46% 감소**하여 시스템 안정성 크게 향상
         
-        ![image.png](attachment:94ee51a9-059f-439f-8d0d-dbfad9c49194:image.png)
+        ![image](https://github.com/user-attachments/assets/4ce2654c-1fc1-4b81-a847-216ebe59d92f)
+
         
 
 ### 프로젝트 회고
