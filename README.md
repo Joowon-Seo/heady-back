@@ -48,9 +48,10 @@
 ![heady ERD](https://github.com/user-attachments/assets/6d70b371-c4b1-43a8-aa79-a4c9df404d0c)
 
 
-### 트러블 슈팅 - 1
+
 
 ---
+### 트러블 슈팅 - 1
 
 **[로그인 API 비밀번호 해싱 병목 현상 및 성능 최적화](https://blog.naver.com/smileman___/223891986773) (결과: 평균 응답 시간 504ms → 75ms)**
 
@@ -87,9 +88,10 @@
 
     
 
-### 트러블 슈팅 - 2
+
 
 ---
+### 트러블 슈팅 - 2
 
 **[음식 검색 API Full Scan 및 Slow Query 문제 해결](https://blog.naver.com/smileman___/223889586212) (결과: 평균 응답 시간 552ms → 23.4ms)**
 
