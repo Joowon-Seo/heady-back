@@ -13,6 +13,43 @@
         - guest123@gmail.com
         - guest!123
 - **깃헙 링크** : https://github.com/Joowon-Seo/heady-back
+<p align="center">
+  <table align="center">
+    <tr>
+      <td align="center">
+        <p><b>메인 화면</b></p>
+        <img src="https://github.com/user-attachments/assets/9fc5f64d-9daf-4f28-bef2-6a75f1ee265d" width="90%">
+      </td>
+      <td align="center">
+        <p><b>기록 화면</b></p>
+        <img src="https://github.com/user-attachments/assets/278a1f9c-7ab5-429a-a4cc-d1172bf80338" width="90%">
+      </td>
+      <td align="center">
+        <p><b>통계 화면</b></p>
+        <img src="https://github.com/user-attachments/assets/2fc821d9-2b66-4b46-a5dc-385290a4f02e" width="90%">
+      </td>
+      <td align="center">
+        <p><b>내 정보 화면면</b></p>
+        <img src="https://github.com/user-attachments/assets/7e5d4021-d534-493f-b500-1e157e3682c9" width="90%">
+      </td>
+    </tr>
+  </table>
+</p>
+
+<p align="center">
+  <table align="center">
+    <tr>
+      <td align="center">
+        <p><b>AI 분석 1</b></p>
+        <img src="https://github.com/user-attachments/assets/d55e3828-fad8-458d-b050-4cd3f3bdfd31" width="90%">
+      </td>
+      <td align="center">
+        <p><b>AI 분석 2</b></p>
+        <img src="https://github.com/user-attachments/assets/90ec4a2a-00d3-4429-8e16-0ae7eb7167b5" width="90%">
+      </td>
+    </tr>
+  </table>
+</p>
 
 ### 주요 내용
 
