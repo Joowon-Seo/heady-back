@@ -8,11 +8,11 @@
 혈당 기록, 영양소 추적, 통계 분석 등의 기능을 제공하여 사용자의 건강한 생활 습관 형성을 돕습니다.
 - **기간**: 2025.04.01 ~ 2025.05.28
 - **인원**: 1명 (개인 프로젝트)
-- **guest 계정**
-    - guest123@gmail.com
-    - guest!123
-
-[Heady: AI 기반 개인 맞춤 혈당 관리 서비스](https://healthsteady.site/)
+- **배포 링크** : https://healthsteady.site/
+    - **guest 계정**
+        - guest123@gmail.com
+        - guest!123
+- **깃헙 링크** :
 
 ### 주요 내용
 
